@@ -32,8 +32,8 @@ SharedPtr<int> s_p1(s1);
 SharedPtr<int> s_p2(s2);
 s_p1.swap(s_p2);
 EXPECT_EQ(s_p1.use_count(), s_p2.use_count());
-EXPECT_EQ(s_p1, 3);
-EXPECT_EQ(s_p2, 1);
+EXPECT_EQ(*s_p1, 3);
+EXPECT_EQ(*s_p2, 1);
 }
 
 TEST(shared_ptr, test_4){

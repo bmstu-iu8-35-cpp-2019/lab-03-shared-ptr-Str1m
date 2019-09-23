@@ -36,7 +36,7 @@ template<typename T>
 class SharedPtr {
     Control *count;
     T *data;
-    
+
 public:
     ~SharedPtr() {
         if (*this) {

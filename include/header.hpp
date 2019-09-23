@@ -14,7 +14,7 @@ public:
         counter = 0;
     }
 
-    Control(int a) {
+    explicit Control(int a) {
         counter = a;
     }
 
@@ -29,7 +29,6 @@ public:
     size_t c_count() {
         return static_cast<size_t>(counter);
     }
-
 };
 
 template<typename T>
@@ -37,12 +36,14 @@ template<typename T>
 class SharedPtr {
     Control *count;
     T *data;
+    
 public:
     ~SharedPtr() {
         if (*this) {
             count->decrease();
-            if (count == 0) {
-
+            if (count->c_count()== 0) {
+                delete data;
+                delete count;
             }
         }
     }
@@ -52,7 +53,7 @@ public:
         data = nullptr;
     }
 
-    SharedPtr(T *d) {
+   explicit SharedPtr(T *d) {
         count = new Control(1);
         data = d;
     }
@@ -136,7 +137,6 @@ public:
         *this = buf;
     }
 
-    // возвращает количество объектов SharedPtr, которые ссылаются на тот же управляемый объект
     auto use_count() const -> size_t {
         if (!*this)
             return 0;

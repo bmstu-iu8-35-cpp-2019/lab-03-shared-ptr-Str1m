@@ -41,7 +41,7 @@ public:
     ~SharedPtr() {
         if (*this) {
             count->decrease();
-            if (count->c_count()== 0) {
+            if (count->c_count() == 0) {
                 delete data;
                 delete count;
             }
@@ -53,7 +53,7 @@ public:
         data = nullptr;
     }
 
-   explicit SharedPtr(T *d) {
+    explicit SharedPtr(T *d) {
         count = new Control(1);
         data = d;
     }
@@ -66,7 +66,7 @@ public:
 
     SharedPtr(SharedPtr &&r) {
         count = r.count;
-        if (r != nullptr) count->increase();
+        if (r) count->increase();
         data = r.data;
     }
 
@@ -82,7 +82,6 @@ public:
         count = r.count;
         if (*this) count->increase();
         return (*this);
-        //r.counter++;
     }
 
     auto operator=(SharedPtr &&r) -> SharedPtr & {
@@ -94,7 +93,7 @@ public:
             }
         }
         data = r.data;
-        count = r.counter;
+        count = r.count;
         if (*this) count->increase();
         return (*this);
     }
@@ -132,9 +131,8 @@ public:
     void swap(SharedPtr &r) {
         if (data == r.data)
             return;
-        auto buf = r;
-        r = *this;
-        *this = buf;
+        std::swap(r.data, this->data);
+        std::swap(r.count, this->count);
     }
 
     auto use_count() const -> size_t {
